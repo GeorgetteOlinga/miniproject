@@ -1,0 +1,72 @@
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    color: white;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+html, body {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-image: url("images/bg.jfif");
+}
+
+button {
+    border: 0;
+    background-color: #310831;
+    padding: .5rem;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(114, 34, 205);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#game {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.left img {
+    transform: rotate(90deg);
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+}
+
+#game img {
+    width: 150px;
+}
+
+.hull {
+    width: 150px;
+    padding: .25rem;
+    border: 2px solid white;
+    position: relative;
+}
+
+.hp {
+    background-color: red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 100%;
+}

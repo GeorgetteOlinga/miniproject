@@ -1,46 +1,73 @@
+const ussAssemblyEl = document.querySelector('#uss-assembly')
+const aliensEl = document.querySelector('#aliens')
+const outputEl = document.querySelector('#output')
+const attackBtn = document.querySelector('#attack')
+const retreatBtn = document.querySelector('#retreat')
+
 // we have 2 Objects: USSAssembly and Alienship. below are their respectful properties
 
 class Ship{
     constructor (hull,firepower,accuracy,name){
         this.hull = hull
+        this.initialHull = hull
         this.firepower = firepower
         this.accuracy = accuracy
         this.name = name
         this.isAlien = name.startsWith('Alien')
         this.emoji = this.isAlien ? "👽" : "🚀"
-        // WIN .
-        
     }
-    attack(target) {
-        console.log(`\n${this.emoji} ▫▫▫▫`)
-        console.log(`${this.name} is attackng ${target.name}.`)
+    async attack(target) {
+        await output(`\n${this.emoji} ▫▫▫▫`)
+        await output(`${this.name} is attackng ${target.name}.`)
+        // IF IT HIT
         if (Math.random() < this.accuracy){
-            console.log(`It was a hit!`)
-            target.getHit(this)
+            await output(`It was a hit!`)
+            setTimeout(() => {
+                target.getHit(this)
+            }, 1000);
+        // IF IT MISSED
         } else {
-            console.log(`${this.name} missed.`)
-            target.attack(this)
+            await output(`${this.name} missed.`)
+            // IF YOU SHOT
+            if (target.isAlien) {
+                setTimeout(() => {
+                    target.attack(this)
+                }, 1000);
+            // IF THE ALIEN SHOT
+            } else {
+                promptUser()
+            }
         }
     }
-    getHit(attacker) {
-        console.log(`\n${this.name} was hit by ${attacker.name}.`)
+    async getHit(attacker) {
+        await output(`\n${this.name} was hit by ${attacker.name}.`)
         let originalHull = this.hull.toFixed(2)
         this.hull -= attacker.firepower
-        console.log(`The hull of ${this.name} decreased from ${originalHull} to ${this.hull.toFixed(2)}`)
+        renderAllShips()
+        await output(`The hull of ${this.name} decreased from ${originalHull} to ${this.hull.toFixed(2)}`)
         if (this.hull < 0) {
-            console.log(`${this.name} was destroyed!`)
+            await output(`${this.name} was destroyed!`)
+            // IF YOU DESTROYED A SHIP
             if (this.isAlien) {
                 aliens.shift()
+                renderAllShips()
                 if (aliens.length > 0) {
-                    attacker.attack(aliens[0])
+                    setTimeout(() => {
+                        promptUser()
+                    }, 1000);
                 } else {
-                    console.log(`All the aliens are dead. You won!`)
+                    output(`All the aliens are dead. You won!`)
                 }
+                // IF YOU WERE DESTROYED
             } else {
                 `Game over!`
             }
-        } else {
-            this.attack(attacker)
+        } else { 
+            // IF SURVIVED
+            if (this.)
+            setTimeout(() => {
+                this.attack(attacker)
+            }, 1000);
         }
     }
 }
@@ -49,18 +76,76 @@ function randomRange(lo, hi) {
     return (Math.random()*(hi-lo))+lo
 }
 
+function renderHull(ship) {
+    let shipHull = document.createElement('div')
+    shipHull.classList = 'hull'
+    shipHull.innerText = ship.hull.toFixed(2) + " / " + ship.initialHull.toFixed(2)
+    shipHull.innerHTML += `<div class="hp" style="width: ${ship.hull/ship.initialHull*100}%;"></div>`
+    return shipHull
+}
+
+function renderShip(ship, url, parent) {
+    let shipEl = document.createElement('div')
+    shipEl.classList = 'ship'
+    let shipLabel = document.createElement('h3')
+    shipLabel.innerText = ship.name
+    let shipHull = renderHull(ship)
+    let shipImage = document.createElement('img')
+    shipImage.src = url
+    shipEl.append(shipImage)
+    shipEl.append(shipLabel)
+    shipEl.append(shipHull)
+    parent.append(shipEl)
+}
+
+function renderAllShips() {
+    ussAssemblyEl.innerHTML = ""
+    aliensEl.innerHTML = ""
+
+    renderShip(ussAssembly, './images/spaceship.png', ussAssemblyEl)
+    aliens.forEach(alien => {
+        renderShip(alien, './images/ufo.png', aliensEl)
+    })
+}
+
+function output(message) {
+    outputEl.innerText = message
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 1000);
+    })
+}
+
+function promptUser() {
+    output('Will you attack or retreat?')
+}
+
+function initGame() {
+    renderAllShips()
+    promptUser()
+}
+
 const ussAssembly= new Ship(20,5,.7,"USS Assembly")
 const aliens = []
 for(let i = 0; i < 6; i++) {
-    let alienHull = randomRange(3, 6)
+    let alienHull = randomRange(3.5, 7)
     let alienFirepower = randomRange(2, 4)
     let alienAccuracy = randomRange(.6, .8)
     let alienName = `Alien ship #${i+1}`
     aliens.push(new Ship(alienHull, alienFirepower, alienAccuracy, alienName))
 }
 
-ussAssembly.attack(aliens[0])
+attackBtn.addEventListener('click', ()=>{
+    ussAssembly.attack(aliens[0])
+})
+
+initGame()
+
+// ussAssembly.attack(aliens[0])
 
 // console.log(ussAssembly)
 // console.log(aliens)
 
+// document.body.append('hi')= add (hi)
+// document.body.innerHTML = "<h1>Hello</h1>"
