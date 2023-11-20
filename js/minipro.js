@@ -3,6 +3,7 @@ const aliensEl = document.querySelector('#aliens')
 const outputEl = document.querySelector('#output')
 const attackBtn = document.querySelector('#attack')
 const retreatBtn = document.querySelector('#retreat')
+const controlsEl = document.querySelector('#controls')
 
 // we have 2 Objects: USSAssembly and Alienship. below are their respectful properties
 
@@ -64,10 +65,16 @@ class Ship{
             }
         } else { 
             // IF SURVIVED
-            if (this.)
-            setTimeout(() => {
-                this.attack(attacker)
-            }, 1000);
+            // IF ALIEN WAS HIT
+            if (this.isAlien) {
+                setTimeout(() => {
+                    this.attack(attacker)
+                }, 1000);
+
+            } else {
+                // IF YOU WERE HIT
+                promptUser()
+            }
         }
     }
 }
@@ -119,11 +126,19 @@ function output(message) {
 
 function promptUser() {
     output('Will you attack or retreat?')
+    showControls()
 }
 
 function initGame() {
     renderAllShips()
     promptUser()
+}
+
+function hideControls() {
+    controlsEl.style.visibility = 'hidden'
+}
+function showControls() {
+    controlsEl.style.visibility = 'visible'
 }
 
 const ussAssembly= new Ship(20,5,.7,"USS Assembly")
@@ -137,7 +152,13 @@ for(let i = 0; i < 6; i++) {
 }
 
 attackBtn.addEventListener('click', ()=>{
+    hideControls()
     ussAssembly.attack(aliens[0])
+})
+
+retreatBtn.addEventListener('click', () => {
+    hideControls()
+    output("You lost!")
 })
 
 initGame()
